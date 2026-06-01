@@ -5,7 +5,6 @@ const path = require("path");
 require("dotenv").config();
 
 const pageRoutes = require("./routes/pageRoutes");
-const contactRoutes = require("./routes/contactRoutes");
 
 const app = express();
 
@@ -25,7 +24,6 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // Routes
 app.use("/", pageRoutes);
-app.use("/contact", contactRoutes);
 
 // 404 page
 app.use((req, res) => {

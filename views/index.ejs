@@ -4,116 +4,88 @@
   <%- include("partials/head", { title: title }) %>
 </head>
 
-<body>
+<body class="landing-page">
   <%- include("partials/nav") %>
 
-  <!-- HERO SECTION -->
   <main>
-    <section class="hero">
-      <div class="hero-content">
-        <p class="eyebrow">Writer · Producer · Musician · Educator</p>
+    <!-- OPENING HERO -->
+    <section class="opening-hero">
+      <div class="hero-bg">
+        <img src="/images/alex_haak.jpeg" alt="Portrait of musician and creative professional">
+      </div>
+
+      <div class="hero-overlay"></div>
+
+      <div class="hero-inner">
+        <p class="hero-kicker">Writer · Producer · Musician · Coach</p>
 
         <h1>
-          Helping artists and creative teams bring music projects to life.
+          Building music, artists, and creative careers.
         </h1>
 
-        <p class="hero-description">
-          I work across songwriting, production, teaching, artist development,
-          and funding proposals — supporting projects from early ideas to
-          polished releases and public programmes.
+        <p class="hero-copy">
+          Supporting artists through music production, writing, teaching,
+          creative direction, funding proposals, and artist business coaching.
         </p>
 
-        <div class="hero-buttons">
-          <a href="/contact" class="btn btn-primary">Work With Me</a>
-          <a href="#projects" class="btn btn-secondary">View Projects</a>
+        <div class="hero-actions">
+          <a href="#contact" class="btn btn-primary">Work With Me</a>
+          <a href="#music" class="btn btn-outline">Listen / Watch</a>
         </div>
       </div>
 
-      <div class="hero-image">
-        <img src="/images/hero/profile.jpg" alt="Portrait of musician and creative professional">
+      <div class="scroll-cue">
+        <span>Scroll</span>
       </div>
     </section>
 
-    <!-- SERVICES SECTION -->
-    <section class="section" id="services">
-      <div class="section-header">
-        <p class="eyebrow">Services</p>
-        <h2>What I Do</h2>
-        <p>
-          Creative and strategic support for musicians, artists, schools,
-          organisations, and community projects.
-        </p>
-      </div>
+    <!-- ABOUT -->
+    <section class="content-section" id="about">
+      <div class="section-label">About</div>
 
-      <div class="card-grid">
-        <% services.forEach(service => { %>
-          <article class="card">
-            <h3><%= service.title %></h3>
-            <p><%= service.description %></p>
-          </article>
-        <% }) %>
-      </div>
-    </section>
+      <div class="section-content split">
+        <h2>
+          A creative operator working across music, education, and artist development.
+        </h2>
 
-    <!-- FEATURED PROJECTS SECTION -->
-    <section class="section section-dark" id="projects">
-      <div class="section-header">
-        <p class="eyebrow">Selected Work</p>
-        <h2>Projects & Experience</h2>
-        <p>
-          A snapshot of music, management, teaching, and proposal-based work.
-        </p>
-      </div>
-
-      <div class="project-grid">
-        <% featuredProjects.forEach(project => { %>
-          <article class="project-card">
-            <% if (project.image) { %>
-              <img src="<%= project.image %>" alt="<%= project.title %>">
-            <% } %>
-
-            <div class="project-content">
-              <p class="project-category"><%= project.category %></p>
-              <h3><%= project.title %></h3>
-              <p class="project-role"><%= project.role %></p>
-              <p><%= project.description %></p>
-            </div>
-          </article>
-        <% }) %>
-      </div>
-
-      <div class="section-footer">
-        <a href="/projects" class="btn btn-secondary">See More Projects</a>
-      </div>
-    </section>
-
-    <!-- MUSIC / BAND SECTION -->
-    <section class="section" id="music">
-      <div class="section-header">
-        <p class="eyebrow">Music</p>
-        <h2>Band & Music Work</h2>
-        <p>
-          Performance, songwriting, releases, and live music experience.
-        </p>
-      </div>
-
-      <div class="music-layout">
-        <div class="music-text">
-          <h3>From the stage to the studio</h3>
-
+        <div>
           <p>
-            My music practice informs the way I work with artists. Being active
-            as a musician gives me a practical understanding of songwriting,
-            performance, collaboration, and the realities of building creative work.
+            I work at the intersection of songwriting, production, performance,
+            teaching, and music business strategy. My background as a musician
+            helps me understand the creative process, while my project work helps
+            artists turn ideas into structured outcomes.
           </p>
 
-          <a href="/music" class="btn btn-primary">Explore Music</a>
+          <p>
+            Whether it is building a song, shaping an artist profile, preparing
+            a funding proposal, or running a workshop, my focus is helping creative
+            people move from idea to execution.
+          </p>
         </div>
+      </div>
+    </section>
 
-        <div class="music-list">
-          <% music.forEach(item => { %>
-            <article class="music-card">
-              <h4><%= item.title %></h4>
+    <!-- MUSIC -->
+    <section class="content-section dark-section" id="music">
+      <div class="section-label">Music</div>
+
+      <div class="section-header">
+        <h2>Music & Performance</h2>
+        <p>
+          Original music, band work, live performances, and collaborative releases.
+        </p>
+      </div>
+
+      <div class="music-grid">
+        <% music.forEach(item => { %>
+          <article class="music-card">
+            <% if (item.image) { %>
+              <img src="<%= item.image %>" alt="<%= item.title %>">
+            <% } %>
+
+            <div class="music-card-content">
+              <p><%= item.type %></p>
+              <h3><%= item.title %></h3>
               <p><%= item.description %></p>
 
               <% if (item.link) { %>
@@ -121,96 +93,73 @@
                   Listen / Watch
                 </a>
               <% } %>
-            </article>
-          <% }) %>
+            </div>
+          </article>
+        <% }) %>
+      </div>
+    </section>
+
+    <!-- ARTIST BUSINESS COACHING -->
+    <section class="content-section" id="coaching">
+      <div class="section-label">Artist Business Coaching</div>
+
+      <div class="section-content split">
+        <h2>
+          Helping artists think clearly about their creative direction, career, and business.
+        </h2>
+
+        <div>
+          <p>
+            I support emerging artists with practical guidance across positioning,
+            release planning, live strategy, content direction, artist bios,
+            proposal writing, and project planning.
+          </p>
+
+          <div class="service-list">
+            <div>
+              <h3>Artist Positioning</h3>
+              <p>Clarify identity, audience, story, and creative direction.</p>
+            </div>
+
+            <div>
+              <h3>Release Planning</h3>
+              <p>Plan singles, campaigns, timelines, assets, and rollout strategy.</p>
+            </div>
+
+            <div>
+              <h3>Funding Proposals</h3>
+              <p>Shape project ideas into structured grant or sponsorship proposals.</p>
+            </div>
+
+            <div>
+              <h3>Music Business Basics</h3>
+              <p>Understand goals, opportunities, income streams, and next steps.</p>
+            </div>
+          </div>
+
+          <a href="#contact" class="btn btn-primary">Enquire About Coaching</a>
         </div>
       </div>
     </section>
 
-    <!-- TEACHING SECTION -->
-    <section class="section section-muted" id="teaching">
-      <div class="split-section">
-        <div>
-          <p class="eyebrow">Teaching</p>
-          <h2>Workshops, lessons, and creative learning</h2>
-        </div>
+    <!-- CONTACT -->
+    <section class="contact-section" id="contact">
+      <p class="section-label">Contact</p>
 
-        <div>
-          <p>
-            I offer teaching and workshop support for songwriting, music production,
-            performance, creative confidence, and music project development.
-          </p>
-
-          <p>
-            Sessions can be shaped for individuals, schools, youth programmes,
-            community groups, or artists looking to develop their craft.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <!-- FUNDING PROPOSALS SECTION -->
-    <section class="section" id="proposals">
-      <div class="split-section">
-        <div>
-          <p class="eyebrow">Funding & Proposals</p>
-          <h2>Turning creative ideas into structured proposals</h2>
-        </div>
-
-        <div>
-          <p>
-            I support artists and creative teams with project descriptions,
-            funding applications, budgets, timelines, programme outlines,
-            and impact statements.
-          </p>
-
-          <p>
-            This is useful for grant applications, school programmes,
-            arts initiatives, community projects, and artist development work.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <!-- ABOUT SECTION -->
-    <section class="section section-dark" id="about">
-      <div class="about-layout">
-        <div>
-          <p class="eyebrow">About</p>
-          <h2>Music-minded, project-focused.</h2>
-        </div>
-
-        <div>
-          <p>
-            I work at the intersection of music, writing, production, teaching,
-            and creative project development. My experience as both a musician
-            and project collaborator helps me understand the artistic, practical,
-            and strategic sides of bringing music work into the world.
-          </p>
-
-          <a href="/files/resume.pdf" class="btn btn-secondary" download>
-            Download Resume
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <!-- CONTACT CTA -->
-    <section class="contact-cta" id="contact">
-      <p class="eyebrow">Contact</p>
-
-      <h2>Need help with writing, production, teaching, or a music proposal?</h2>
+      <h2>Let’s build something in music.</h2>
 
       <p>
-        Reach out for collaborations, workshops, artist development,
-        proposal support, production work, or band-related enquiries.
+        Reach out for writing, production, teaching, funding proposals,
+        artist business coaching, collaborations, or music-related projects.
       </p>
 
-      <a href="/contact" class="btn btn-primary">Get In Touch</a>
+      <div class="contact-links">
+        <a href="mailto:Alexhaak@fastmail.fm">Alexhaak@fastmail.fm</a>
+        <a href="https://www.instagram.com/alexandrh/" target="_blank" rel="noopener noreferrer">Instagram</a>
+        <a href="https://soundcloud.com/alexander-haak" target="_blank" rel="noopener noreferrer">SoundCloud</a>
+      </div>
     </section>
   </main>
-
-  <%- include("partials/footer") %>
 
   <script src="/js/main.js"></script>
 </body>
