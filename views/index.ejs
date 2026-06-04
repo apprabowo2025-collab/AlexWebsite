@@ -72,7 +72,8 @@
       <div class="section-header">
         <h2>Music & Performance</h2>
         <p>
-          Original music, band work, live performances, and collaborative releases.
+          Original music, production work, live performance, songwriting credits,
+          releases, and touring experience.
         </p>
       </div>
 
@@ -96,6 +97,29 @@
             </div>
           </article>
         <% }) %>
+      </div>
+
+      <!-- SELECTED MUSIC CREDITS -->
+      <div class="credits-section">
+        <div class="section-content split">
+          <h3>Selected Credits</h3>
+          <br>
+
+          <div class="credits-list">
+            <% musicCredits.forEach(credit => { %>
+              <article class="credit-item">
+                <p class="credit-year"><%= credit.year %></p>
+                <h4><%= credit.title %></h4>
+                <p class="credit-role"><%= credit.role %></p>
+                <p><%= credit.description %></p>
+              </article>
+            <% }) %>
+
+            <a href="/files/resume.pdf" class="btn btn-outline" download>
+              Download Full Resume
+            </a>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -138,6 +162,49 @@
           </div>
 
           <a href="#contact" class="btn btn-primary">Enquire About Coaching</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- EDUCATION -->
+    <section class="content-section dark-section" id="education">
+      <div class="section-label">Education</div>
+
+      <div class="section-content split">
+        <h2>
+          Workshops, teaching, and creative learning programmes.
+        </h2>
+
+        <div>
+          <p>
+            I offer education-focused support for individuals, schools, youth programmes,
+            arts organisations, and community groups looking to develop music, songwriting,
+            performance, and creative project skills.
+          </p>
+
+          <div class="service-list education-list">
+            <div>
+              <h3>Songwriting Workshops</h3>
+              <p>Guided sessions on lyrics, melody, structure, storytelling, and creative confidence.</p>
+            </div>
+
+            <div>
+              <h3>Music Production Lessons</h3>
+              <p>Introductory or project-based support for demos, arrangement, recording, and production workflow.</p>
+            </div>
+
+            <div>
+              <h3>Performance Coaching</h3>
+              <p>Support for stage presence, live arrangement, rehearsal planning, and performance preparation.</p>
+            </div>
+
+            <div>
+              <h3>School & Community Programmes</h3>
+              <p>Custom workshops for schools, youth groups, community arts projects, and creative organisations.</p>
+            </div>
+          </div>
+
+          <a href="#contact" class="btn btn-primary">Enquire About Education Work</a>
         </div>
       </div>
     </section>

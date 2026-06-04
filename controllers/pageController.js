@@ -1,13 +1,16 @@
 // controllers/pageController.js
 
 const musicModel = require("../models/musicModel");
+const musicCreditModel = require("../models/creditModel")
 
 exports.getHomePage = (req, res) => {
   const music = musicModel.getAllMusic();
+  const musicCredits = musicCreditModel.getAllMusicCredits();
 
   res.render("index", {
     title: "Home",
-    music
+    music,
+    musicCredits
   });
 };
 
