@@ -9,5 +9,7 @@ router.get("/", pageController.getHomePage);
 router.get("/music", pageController.getMusicPage);
 router.get("/coaching", pageController.getCoachingPage);
 router.get("/contact", pageController.getContactPage);
+router.post("/analyze", pageController.analysisanalyzeCustomerFeedback);
+
 
 module.exports = router;

@@ -2,6 +2,8 @@
 
 const musicModel = require("../models/musicModel");
 const musicCreditModel = require("../models/creditModel")
+const { analyzeFeedback } = require("../services/aiService");
+
 
 exports.getHomePage = (req, res) => {
   const music = musicModel.getAllMusic();
@@ -34,3 +36,11 @@ exports.getContactPage = (req, res) => {
     title: "Contact"
   });
 };
+
+exports.analysisanalyzeCustomerFeedback = async (req, res) => {
+  const feedback = req.body.feedback;
+  const analysis = await analyzeFeedback(feedback);
+
+  res.render("results", { feedback, analysis });
+};
+
