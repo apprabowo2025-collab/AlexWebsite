@@ -173,9 +173,15 @@ onBeforeUnmount(stopTimer)
 
       <!-- 2. Marquee: oxblood strip -->
       <section class="marquee" aria-label="Services">
+        <!-- The list is written twice so it can scroll in a seamless loop;
+             the second copy is hidden from screen readers. -->
         <div class="marquee-row">
-          <span v-for="(item, index) in marquee" :key="item">
-            {{ item }}<i v-if="index < marquee.length - 1" aria-hidden="true">✦</i>
+          <span
+            v-for="(item, index) in [...marquee, ...marquee]"
+            :key="index"
+            :aria-hidden="index >= marquee.length ? 'true' : undefined"
+          >
+            {{ item }}<i aria-hidden="true">✦</i>
           </span>
         </div>
       </section>

@@ -73,7 +73,7 @@ export default {
       description: 'Live recordings, performance clips and stage work from recent shows.',
       image: '/images/alex_haak.jpeg',
       position: '50% 25%',
-      link: 'https://youtube.com',
+      link: 'https://www.youtube.com/@charlotsmusic',
       linkLabel: 'Watch on YouTube',
     },
     {
@@ -90,7 +90,7 @@ export default {
   credits: [
     {
       year: '2024',
-      title: 'Production and arrangement for [BAND NAME]',
+      title: 'Production and arrangement for CHARLOT',
       role: 'Producer / Arranger',
       description: 'Production direction, arrangement and creative development for the band’s recorded material.',
     },
@@ -102,13 +102,13 @@ export default {
     },
     {
       year: '2023',
-      title: 'Released [BAND NAME] EP',
+      title: 'Released CHARLOT EP',
       role: 'Songwriter / Performer / Producer',
       description: 'Writing, recording, production and release of the band’s EP.',
     },
     {
       year: '2022',
-      title: 'Signed as a songwriter at [COMPANY NAME]',
+      title: 'Signed as a songwriter at AT PUBLISHING',
       role: 'Songwriter',
       description: 'Original writing and creative material for music projects.',
     },

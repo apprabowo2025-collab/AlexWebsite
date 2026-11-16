@@ -688,6 +688,30 @@
   font-style: normal;
 }
 
+/* The strip is wider than most screens, so it scrolls in a slow seamless loop:
+   the list is written twice and the row slides left by exactly one copy. */
+.marquee-row {
+  justify-content: flex-start;
+  gap: 0;
+  width: max-content;
+  animation: marquee-scroll 40s linear infinite;
+}
+
+/* Spacing lives on each item (not the flex gap) so both copies are exactly the same width */
+.marquee-row > span {
+  padding-right: 34px;
+}
+
+.marquee:hover .marquee-row {
+  animation-play-state: paused;
+}
+
+@keyframes marquee-scroll {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
 /* ---------- Sections ---------- */
 
 .zone {
@@ -1540,22 +1564,250 @@ a.show-row:hover .show-next {
     width: 60vw;
     opacity: 0.25;
   }
+}
+
+/* ---------- Phones ---------- */
+
+@media (max-width: 760px) {
+  /* Tighter rhythm: less dead space between sections */
+  .zone {
+    padding: 64px 0;
+  }
+
+  .zone-inner {
+    padding: 0 20px;
+  }
+
+  .edit-head {
+    margin-bottom: 32px;
+    padding-bottom: 20px;
+  }
+
+  .edit-title {
+    font-size: clamp(2.3rem, 11vw, 3rem);
+  }
+
+  /* Small labels: nothing under 12px on a phone */
+  .kicker,
+  .issue-chip,
+  .next-stop,
+  .credit-role,
+  .show-city,
+  .footer-nav {
+    font-size: 0.75rem;
+  }
+
+  .line-link,
+  .mag-btn,
+  .glass-btn {
+    font-size: 0.78rem;
+  }
+
+  .mag-header .mag-btn-sm {
+    font-size: 0.75rem;
+  }
+
+  .show-action {
+    font-size: 0.75rem;
+  }
+
+  .show-next {
+    font-size: 0.75rem;
+  }
+
+  .mag-logo {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  /* Comfortable tap targets */
+  .line-link {
+    min-height: 44px;
+    align-items: center;
+    padding: 0;
+  }
+
+  .next-stop {
+    min-height: 40px;
+  }
+
+  /* Services strip scrolls in a slow loop instead of being cut off */
+  .marquee {
+    padding: 14px 0;
+  }
 
   .marquee-row {
-    justify-content: flex-start;
-    padding-left: 22px;
+    font-size: 1.35rem;
+    animation-duration: 26s;
+  }
+
+  /* Music: swipeable row of cards instead of three tall stacked cards */
+  .music-grid {
+    display: flex;
+    gap: 14px;
+    margin: 0 -20px;
+    padding: 0 20px 6px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-left: 20px;
+    scrollbar-width: none;
+  }
+
+  .music-grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .music-card {
+    flex: 0 0 82%;
+    scroll-snap-align: start;
+  }
+
+  .music-art {
+    aspect-ratio: 5 / 4;
+  }
+
+  .music-copy {
+    padding: 4px 20px 18px;
+  }
+
+  .music-copy h3 {
+    font-size: 1.5rem;
+  }
+
+  .music-no {
+    font-size: 2.1rem;
+  }
+
+  .credits {
+    gap: 28px;
+    margin-top: 64px;
+  }
+
+  .credits-list li {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2px;
+    padding: 20px 0;
+  }
+
+  .credit-year {
+    font-size: 1.3rem;
+  }
+
+  .credits-list h4 {
+    font-size: 1.25rem;
+  }
+
+  /* Coaching: compact numbered rows instead of tall cards */
+  .coach-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+  }
+
+  .coach-card {
+    display: grid;
+    grid-template-columns: 48px minmax(0, 1fr);
+    column-gap: 14px;
+    padding: 18px;
+    border-radius: 18px;
+  }
+
+  .coach-no {
+    grid-row: span 2;
+    margin: 0;
+    font-size: 1.9rem;
+  }
+
+  .coach-card h3 {
+    margin-bottom: 2px;
+    font-size: 1.2rem;
+  }
+
+  .coach-card p {
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  .coach-cta {
+    width: 100%;
+    margin-top: 24px;
+  }
+
+  /* Education: banner runs edge to edge, list becomes divided rows */
+  .zone-glow {
+    padding: 0;
+  }
+
+  .zone-glow .zone-inner {
+    padding: 0;
+  }
+
+  .glow-banner {
+    gap: 28px;
+    padding: 56px 20px;
+    border-radius: 0;
+  }
+
+  .glow-text {
+    margin: 16px 0 24px !important;
+  }
+
+  .glow-list {
+    gap: 0;
+    border-top: 1px solid rgba(23, 20, 20, 0.14);
+  }
+
+  .glow-list li {
+    padding: 16px 0;
+    border-bottom: 1px solid rgba(23, 20, 20, 0.14);
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+  }
+
+  .glow-list h3 {
+    font-size: 1.2rem;
+  }
+
+  /* Contact and footer */
+  .zone-red {
+    padding: 80px 0;
+  }
+
+  .cta-content .mag-btn {
+    width: 100%;
+  }
+
+  .cta-pill {
+    font-size: 0.9rem;
+  }
+
+  .mag-footer {
+    padding: 56px 0 28px;
+  }
+
+  .footer-mark {
+    margin-bottom: 28px !important;
+  }
+
+  .footer-nav {
+    gap: 0 22px;
+  }
+
+  .footer-nav a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  .about-body {
+    padding-top: 12px;
   }
 }
 
 @media (max-width: 560px) {
   .mag-header .mag-btn-sm {
     padding: 0 14px;
-    font-size: 0.62rem;
-  }
-
-  .credits-list li {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 4px;
   }
 
   .cover-actions > * {
