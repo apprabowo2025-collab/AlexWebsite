@@ -64,7 +64,7 @@ export default {
       description: 'Original music, live shows, collaborative songwriting and performance work.',
       image: '/images/tour-photo.webp',
       position: '50% 15%',
-      link: 'https://spotify.com',
+      link: 'https://open.spotify.com/artist/4jwyHfEELByxcUm6JEP5yC?si=tclIKwcQS0-UmTr83fVD2A',
       linkLabel: 'Listen on Spotify',
     },
     {
