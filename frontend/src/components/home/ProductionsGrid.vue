@@ -1,6 +1,7 @@
 <script setup>
 import { computed, onBeforeUnmount, ref } from 'vue'
 import releases, { playlistUrl } from '../../data/productions.js'
+import { locale, t } from '../../i18n.js'
 
 function pad(value) {
   return String(value).padStart(2, '0')
@@ -16,6 +17,9 @@ const trackCount = releases.reduce((sum, r) => sum + r.tracks.length, 0)
 const artistCount = new Set(
   releases.flatMap((r) => r.tracks.flatMap((t) => t.artist.split(',').map((name) => name.trim()))),
 ).size
+
+// The small line above each title: the release's own role if it has one, else "Produced by Alex Haak"
+const roleOf = (release) => release.role?.[locale.value] ?? t.value.productions.role
 
 // On phones only the first 11 tiles show until "Show all" is pressed
 const expanded = ref(false)
@@ -72,14 +76,14 @@ function onDialogClick(event) {
 
 <template>
   <header class="edit-head">
-    <h2 class="edit-title">In the <em>studio</em></h2>
+    <h2 class="edit-title">{{ t.productions.title[0] }}<em>{{ t.productions.title[1] }}</em>{{ t.productions.title[2] }}</h2>
     <div class="edit-aside">
-      <p class="kicker">Productions</p>
-      <p>Records Alex produced for other artists — from remixes for R3HAB and Arcando to singles, EPs and albums.</p>
+      <p class="kicker">{{ t.productions.kicker }}</p>
+      <p>{{ t.productions.intro }}</p>
       <dl class="prod-stats">
-        <div><dt>Tracks</dt><dd>{{ trackCount }}</dd></div>
-        <div><dt>Releases</dt><dd>{{ releases.length }}</dd></div>
-        <div><dt>Artists</dt><dd>{{ artistCount }}</dd></div>
+        <div><dt>{{ t.productions.stats.tracks }}</dt><dd>{{ trackCount }}</dd></div>
+        <div><dt>{{ t.productions.stats.releases }}</dt><dd>{{ releases.length }}</dd></div>
+        <div><dt>{{ t.productions.stats.artists }}</dt><dd>{{ artistCount }}</dd></div>
       </dl>
     </div>
   </header>
@@ -92,7 +96,7 @@ function onDialogClick(event) {
       :class="{ 'is-feature': release.featured, 'is-playing': isPlaying(ri) }"
     >
       <span class="prod-art">
-        <img :src="release.cover" :alt="`Cover of ${release.title} by ${release.artist}`" loading="lazy" />
+        <img :src="release.cover" :alt="t.productions.coverAlt(release.title, release.artist)" loading="lazy" />
       </span>
       <span class="prod-no" aria-hidden="true">{{ pad(ri + 1) }}</span>
 
@@ -100,14 +104,14 @@ function onDialogClick(event) {
         v-if="release.tracks.length > 1"
         type="button"
         class="prod-count"
-        :aria-label="`Show all ${release.tracks.length} tracks of ${release.title}`"
+        :aria-label="t.productions.showTracks(release.tracks.length, release.title)"
         @click="openTracklist(ri)"
       >
-        {{ release.tracks.length }} tracks
+        {{ t.productions.tracks(release.tracks.length) }}
       </button>
 
       <div class="prod-meta">
-        <p class="prod-role">{{ release.role }}</p>
+        <p class="prod-role">{{ roleOf(release) }}</p>
         <h3 class="prod-title">
           <a :href="spotifyUrl(release.tracks[0].spotify)" target="_blank" rel="noopener noreferrer">
             {{ release.title }}
@@ -119,7 +123,7 @@ function onDialogClick(event) {
       <button
         type="button"
         class="prod-play"
-        :aria-label="`${isPlaying(ri) ? 'Stop' : 'Play'} preview of ${release.tracks[0].title}`"
+        :aria-label="(isPlaying(ri) ? t.productions.stop : t.productions.play)(release.tracks[0].title)"
         :aria-pressed="isPlaying(ri)"
         @click="toggle(ri)"
       >
@@ -133,22 +137,22 @@ function onDialogClick(event) {
   </ol>
 
   <div class="prod-foot">
-    <p>Press play on a cover for a 30-second preview. Titles open the track on Spotify.</p>
+    <p>{{ t.productions.footNote }}</p>
     <div class="prod-foot-actions">
       <button v-if="!expanded" type="button" class="mag-btn mag-btn-cream prod-show-all" @click="expanded = true">
-        Show all {{ releases.length }}
+        {{ t.productions.showAll(releases.length) }}
       </button>
       <a class="mag-btn mag-btn-cream" :href="playlistUrl" target="_blank" rel="noopener noreferrer">
-        Full playlist on Spotify ↗
+        {{ t.productions.playlist }}
       </a>
     </div>
   </div>
 
   <dialog ref="dialog" class="prod-dialog" aria-labelledby="prod-dialog-title" @click="onDialogClick" @close="openIndex = null">
     <div v-if="openRelease" class="prod-dialog-body">
-      <button type="button" class="prod-dialog-close" aria-label="Close tracklist" @click="closeTracklist">✕</button>
+      <button type="button" class="prod-dialog-close" :aria-label="t.productions.close" @click="closeTracklist">✕</button>
       <img :src="openRelease.cover" alt="" />
-      <p class="kicker">{{ openRelease.tracks.length }} tracks · {{ openRelease.role }}</p>
+      <p class="kicker">{{ t.productions.tracks(openRelease.tracks.length) }} · {{ roleOf(openRelease) }}</p>
       <h3 id="prod-dialog-title">{{ openRelease.title }}</h3>
       <p class="prod-dialog-artist">{{ openRelease.artist }}</p>
       <ol class="prod-tracks">
@@ -159,7 +163,7 @@ function onDialogClick(event) {
             type="button"
             class="prod-track-play"
             :class="{ 'is-playing': isPlaying(openIndex, ti) }"
-            :aria-label="`${isPlaying(openIndex, ti) ? 'Stop' : 'Play'} preview of ${track.title}`"
+            :aria-label="(isPlaying(openIndex, ti) ? t.productions.stop : t.productions.play)(track.title)"
             :aria-pressed="isPlaying(openIndex, ti)"
             @click="toggle(openIndex, ti)"
           >
