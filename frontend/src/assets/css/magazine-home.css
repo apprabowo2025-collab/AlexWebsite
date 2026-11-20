@@ -528,7 +528,8 @@
   scale: 1.04;
   transition:
     opacity 0.35s ease,
-    scale 0s linear 0.35s;
+    scale 0s linear 0.35s,
+    filter 1.6s ease;
 }
 
 .cover-arch img.is-active {
@@ -536,7 +537,13 @@
   scale: 1;
   transition:
     opacity 0.6s ease 0.3s,
-    scale 5.5s ease-out 0.3s;
+    scale 5.5s ease-out 0.3s,
+    filter 1.6s ease;
+}
+
+/* Hovering the carousel slowly brings the colour back into the photos */
+.cover-stage:hover .cover-arch img {
+  filter: contrast(1.04);
 }
 
 /* Dots under the arch: phones only (desktop uses the numbered thumbnails) */
@@ -639,14 +646,17 @@
   margin-top: 22px;
 }
 
+/* Sits inside the red panel (same 21% width), padded so it never touches the panel's edge */
 .cover-thumbs {
   position: absolute;
-  right: 3vw;
+  right: 0;
   bottom: 54px;
   z-index: 3;
   display: grid;
-  grid-template-columns: repeat(2, 128px);
-  gap: 16px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(10px, 1.1vw, 16px);
+  width: 21%;
+  padding-inline: clamp(16px, 1.8vw, 28px);
 }
 
 .cover-thumb {
@@ -656,13 +666,9 @@
   padding: 0;
   border: 0;
   background: none;
-  color: var(--ink);
+  color: var(--paper);
   font: inherit;
   cursor: pointer;
-}
-
-.cover-thumb:nth-child(2) {
-  color: var(--paper);
 }
 
 .thumb-no {
@@ -2111,12 +2117,10 @@ a.show-action:hover {
     padding: 96px 22px 0;
   }
 
-  /* Ends where the arch ends, so it never sits behind the body text */
+  /* Below desktop the side panel has nothing in it (the thumbnails and the
+     side caption are hidden), so it is left out to keep the red from taking over */
   .cover-panel {
-    top: calc(96px + var(--fs) * 2.9);
-    bottom: auto;
-    width: 22%;
-    height: calc(min(90vw, 460px) - var(--fs) * 1.2);
+    display: none;
   }
 
   .cover-rule-v {
@@ -2143,15 +2147,19 @@ a.show-action:hover {
     inset: auto;
   }
 
-  .cover-line-1 {
-    white-space: normal;
-    max-width: 5ch;
+  /* Tablet and large phones: "Alex Haak" on one line across the full width
+     (the name is about 5.82em wide), with "Live." under it on the right.
+     Below 560px it stacks again, see the phone cover block. */
+  .cover .cover-line-1 {
+    white-space: nowrap;
+    max-width: none;
+    font-size: calc((100vw - 52px) / 5.82);
   }
 
-  .cover-line-2 {
+  .cover .cover-line-2 {
     align-self: flex-end;
-    margin-top: calc(var(--fs) * -0.55);
-    font-size: calc(var(--fs) * 0.8);
+    margin-top: calc((100vw - 52px) / 5.82 * -0.12);
+    font-size: calc((100vw - 52px) / 5.82 * 0.5);
   }
 
   .cover-stage {
@@ -2495,6 +2503,167 @@ a.show-action:hover {
 
   .mag-nav .mag-nav-contact {
     display: block;
+  }
+}
+
+/* Small phones (560px and under): "Alex Haak" stacks over two lines and fills
+   the left two thirds of the screen, with "Live." tucked in under it on the right.
+   Type sizes follow the screen width (HAAK is about 2.93em wide). */
+@media (max-width: 560px) {
+  .cover {
+    --name-width: calc(66.667vw - 22px);
+    --name-size: calc((var(--name-width) - 6px) / 2.93);
+  }
+
+  .cover .cover-line-1 {
+    white-space: normal;
+    max-width: var(--name-width);
+    font-size: var(--name-size);
+  }
+
+  .cover .cover-line-2 {
+    margin-top: calc(var(--name-size) * -0.32);
+    font-size: calc(var(--name-size) * 0.62);
+  }
+}
+
+/* Phone cover */
+@media (max-width: 760px) {
+  .cover {
+    /* Arch width, leaving room for the ring at the sides, capped at 360px */
+    --arch-w: min(70vw, 360px);
+  }
+
+  /* The arch is centred on the page */
+  .cover-stage {
+    align-self: center;
+    width: var(--arch-w);
+    height: auto;
+    aspect-ratio: 36 / 46;
+  }
+
+  /* The ring is drawn by the arch itself on phones, so it always shares the arch's
+     centre line. It is 16px wider than the arch on each side. */
+  .cover-circle {
+    display: none;
+  }
+
+  .cover-stage::before {
+    content: '';
+    position: absolute;
+    top: -16px; /* same centre as the arch's rounded top */
+    left: 50%;
+    z-index: -1;
+    width: calc(100% + 32px);
+    aspect-ratio: 1;
+    border: 1px solid rgba(23, 20, 20, 0.28);
+    border-radius: 50%;
+    translate: -50% 0;
+    pointer-events: none;
+  }
+
+  /* Order on phones: name and "Live." → the arch on the grey → text in a red
+     block that runs edge to edge down to the oxblood strip. The arch stands
+     directly on the red block. */
+  .cover-copy {
+    order: 4;
+    width: auto;
+    margin: 0 -22px;
+    padding: 30px 22px 36px;
+    background: var(--red);
+    color: var(--paper);
+  }
+
+  .cover-copy .next-stop {
+    background: var(--ink);
+  }
+
+  .cover-copy .issue-chip {
+    border-color: rgba(245, 236, 226, 0.45);
+    background: rgba(245, 236, 226, 0.1);
+    box-shadow: none;
+    color: var(--paper);
+  }
+
+  .cover-copy .dot-live {
+    background: var(--rose);
+    animation-name: pulse-light;
+  }
+
+  .cover-copy .cover-body {
+    color: rgba(245, 236, 226, 0.84);
+  }
+
+  .cover-copy .cover-booking em {
+    color: var(--rose);
+  }
+
+  /* Side by side when both fit, otherwise stacked full width */
+  .cover-actions {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .cover-actions > * {
+    flex: 1 1 200px;
+    white-space: nowrap;
+  }
+
+  .cover-copy .mag-btn {
+    border-color: var(--cream);
+    background: var(--cream);
+    color: var(--ink) !important;
+  }
+
+  .cover-copy .mag-btn:hover {
+    border-color: var(--ink);
+    background: var(--ink);
+    color: var(--paper) !important;
+  }
+
+  .cover-copy .glass-btn {
+    border-color: rgba(245, 236, 226, 0.7);
+    background: transparent;
+    color: var(--paper);
+  }
+
+  .cover-copy .glass-btn:hover {
+    border-color: var(--cream);
+    background: var(--cream);
+    color: var(--ink);
+  }
+
+  /* The arch sits on the grey under the name, its base flush on the red block */
+  .cover-stage {
+    order: 3;
+    z-index: 4;
+    margin-top: 40px;
+  }
+
+  /* Dots sit on the bottom of the photo, since the red block starts right under the arch */
+  .cover-dots {
+    top: auto;
+    bottom: 6px;
+    z-index: 1;
+  }
+
+  .cover-dots button::before {
+    background: rgba(245, 236, 226, 0.6);
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.35);
+  }
+
+  .cover-dots button.is-active::before {
+    background: var(--paper);
+  }
+}
+
+@keyframes pulse-light {
+  0% {
+    box-shadow: 0 0 0 0 rgba(243, 198, 203, 0.6);
+  }
+  70%,
+  100% {
+    box-shadow: 0 0 0 9px rgba(243, 198, 203, 0);
   }
 }
 
