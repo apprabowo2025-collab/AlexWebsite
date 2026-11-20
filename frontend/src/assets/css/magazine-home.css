@@ -2562,40 +2562,11 @@ a.show-action:hover {
     pointer-events: none;
   }
 
-  /* Order on phones: name and "Live." → the arch on the grey → text in a red
-     block that runs edge to edge down to the oxblood strip. The arch stands
-     directly on the red block. */
+  /* Order on phones: name and "Live." → the arch → the text, all on the grey */
   .cover-copy {
     order: 4;
     width: auto;
-    margin: 0 -22px;
-    padding: 30px 22px 36px;
-    background: var(--red);
-    color: var(--paper);
-  }
-
-  .cover-copy .next-stop {
-    background: var(--ink);
-  }
-
-  .cover-copy .issue-chip {
-    border-color: rgba(245, 236, 226, 0.45);
-    background: rgba(245, 236, 226, 0.1);
-    box-shadow: none;
-    color: var(--paper);
-  }
-
-  .cover-copy .dot-live {
-    background: var(--rose);
-    animation-name: pulse-light;
-  }
-
-  .cover-copy .cover-body {
-    color: rgba(245, 236, 226, 0.84);
-  }
-
-  .cover-copy .cover-booking em {
-    color: var(--rose);
+    padding: 58px 0 40px;
   }
 
   /* Side by side when both fit, otherwise stacked full width */
@@ -2609,61 +2580,10 @@ a.show-action:hover {
     white-space: nowrap;
   }
 
-  .cover-copy .mag-btn {
-    border-color: var(--cream);
-    background: var(--cream);
-    color: var(--ink) !important;
-  }
-
-  .cover-copy .mag-btn:hover {
-    border-color: var(--ink);
-    background: var(--ink);
-    color: var(--paper) !important;
-  }
-
-  .cover-copy .glass-btn {
-    border-color: rgba(245, 236, 226, 0.7);
-    background: transparent;
-    color: var(--paper);
-  }
-
-  .cover-copy .glass-btn:hover {
-    border-color: var(--cream);
-    background: var(--cream);
-    color: var(--ink);
-  }
-
-  /* The arch sits on the grey under the name, its base flush on the red block */
   .cover-stage {
     order: 3;
     z-index: 4;
     margin-top: 40px;
-  }
-
-  /* Dots sit on the bottom of the photo, since the red block starts right under the arch */
-  .cover-dots {
-    top: auto;
-    bottom: 6px;
-    z-index: 1;
-  }
-
-  .cover-dots button::before {
-    background: rgba(245, 236, 226, 0.6);
-    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.35);
-  }
-
-  .cover-dots button.is-active::before {
-    background: var(--paper);
-  }
-}
-
-@keyframes pulse-light {
-  0% {
-    box-shadow: 0 0 0 0 rgba(243, 198, 203, 0.6);
-  }
-  70%,
-  100% {
-    box-shadow: 0 0 0 9px rgba(243, 198, 203, 0);
   }
 }
 
