@@ -2,9 +2,10 @@
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import content from '../data/siteContent.js'
 import GlassHeader from '../components/home/GlassHeader.vue'
+import ProductionsGrid from '../components/home/ProductionsGrid.vue'
 import '../assets/css/magazine-home.css'
 
-const { cover, tour, marquee, music, credits, coaching, education, contact } = content
+const { cover, shows, marquee, music, credits, coaching, education, contact } = content
 
 // Turns 1 into "01"
 function pad(value) {
@@ -16,27 +17,36 @@ function pad(value) {
 const now = new Date()
 const today = [now.getFullYear(), pad(now.getMonth() + 1), pad(now.getDate())].join('-')
 
-// Upcoming shows only, soonest first, with the day and month split out for the big numbers.
-const upcomingShows = tour.shows
+// Adds the day, month and long date used by the big-number rows.
+function withDates(show) {
+  const [year, month, day] = show.date.split('-').map(Number)
+  const when = new Date(year, month - 1, day)
+  return {
+    ...show,
+    day: pad(day),
+    month: when.toLocaleDateString('en-GB', { month: 'short' }),
+    year,
+    weekday: when.toLocaleDateString('en-GB', { weekday: 'long' }),
+    full: when.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }),
+  }
+}
+
+// Upcoming shows, soonest first
+const upcomingShows = shows
   .filter((show) => show.date >= today)
   .sort((a, b) => a.date.localeCompare(b.date))
-  .map((show) => {
-    const [year, month, day] = show.date.split('-').map(Number)
-    const when = new Date(year, month - 1, day)
-    return {
-      ...show,
-      day: pad(day),
-      month: when.toLocaleDateString('en-GB', { month: 'short' }),
-      weekday: when.toLocaleDateString('en-GB', { weekday: 'long' }),
-      full: when.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }),
-    }
-  })
+  .map(withDates)
 const nextShow = upcomingShows[0]
 
-// "One night", "Two nights" … then digits from ten up
-const numberWords = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine']
-const count = upcomingShows.length
-const nightsLabel = `${numberWords[count] ?? count} night${count === 1 ? '' : 's'}`
+// The last four shows already played, most recent first
+const pastShows = shows
+  .filter((show) => show.date < today)
+  .sort((a, b) => b.date.localeCompare(a.date))
+  .slice(0, 4)
+  .map(withDates)
+
+// Everyone Alex is (or was recently) on stage with, for the intro line
+const bandmates = [...new Set([...upcomingShows, ...pastShows].map((show) => show.with))]
 
 // ---------- Cover carousel ----------
 // slide = the number of the photo showing now
@@ -140,10 +150,10 @@ onBeforeUnmount(stopTimer)
             <span class="next-stop-dot" aria-hidden="true"></span>
             Next stop · {{ nextShow.city }} · {{ Number(nextShow.day) }} {{ nextShow.month }}
           </a>
-          <p class="issue-chip"><span class="dot-live"></span>Writer · Producer · Coach</p>
+          <p class="issue-chip"><span class="dot-live"></span>Touring musician · Producer · Coach</p>
           <p class="cover-body">
-            Supporting artists through music production, writing, teaching, creative direction, funding
-            proposals and artist business coaching.
+            Freelance musician on stage and in the studio — touring, production and writing, plus teaching,
+            funding proposals and artist business coaching.
           </p>
           <p class="cover-booking">Now taking on <em>songwriting sessions</em></p>
           <div class="cover-actions">
@@ -192,13 +202,13 @@ onBeforeUnmount(stopTimer)
           <div class="about-head">
             <p class="kicker">From the desk — About</p>
             <h2 class="about-title">
-              A creative operator working across <em>music, education</em> and artist development.
+              A freelance <em>touring and studio</em> musician who also teaches and coaches artists.
             </h2>
           </div>
           <div class="about-body">
             <p>
-              <span class="drop-cap">I</span> work at the intersection of songwriting, production,
-              performance, teaching and music business strategy. My background as a musician helps me
+              <span class="drop-cap">I</span> play live with artists and bands on tour, produce and write in
+              the studio, and work alongside that on teaching and music business strategy. Being a working musician helps me
               understand the creative process, while my project work helps artists turn ideas into
               structured outcomes.
             </p>
@@ -218,7 +228,7 @@ onBeforeUnmount(stopTimer)
             <h2 class="edit-title">Music &amp; <em>performance</em></h2>
             <div class="edit-aside">
               <p class="kicker">01 — Music</p>
-              <p>Original music, production work, live performance, songwriting credits, releases and touring experience.</p>
+              <p>Touring and live work, studio production and songwriting — as a freelance musician for other artists.</p>
             </div>
           </header>
 
@@ -271,54 +281,87 @@ onBeforeUnmount(stopTimer)
         </div>
       </section>
 
-      <!-- 4b. Live: tour dates as big-number editorial rows on grey -->
+      <!-- 4b. Productions: cover-art grid with 30-second previews -->
+      <section id="productions" class="zone zone-black zone-productions">
+        <div class="zone-inner">
+          <ProductionsGrid />
+        </div>
+      </section>
+
+      <!-- 4c. Live: date // location // touring with // tickets, on grey -->
       <section id="live" class="zone zone-grey">
         <div class="zone-inner">
           <header class="edit-head">
             <h2 class="edit-title">On <em>tour</em></h2>
             <div class="edit-aside">
-              <p class="kicker">Live — {{ tour.name }} tour</p>
-              <p v-if="upcomingShows.length">
-                {{ nightsLabel }} on stage with {{ tour.artist }} on the {{ tour.name }} tour.
+              <p class="kicker">Live — Freelance touring musician</p>
+              <p v-if="bandmates.length">
+                On stage as a hired musician for other artists — most recently with {{ bandmates.join(' and ') }}.
               </p>
-              <p v-else>No shows right now. New dates will appear here first.</p>
+              <p v-else>On stage as a hired musician for other artists.</p>
             </div>
           </header>
 
+          <div class="show-labels" aria-hidden="true">
+            <span>Date</span><span>Location</span><span>Touring with</span><span>Tickets</span>
+          </div>
+
           <ol v-if="upcomingShows.length" class="show-list">
-            <li v-for="(show, index) in upcomingShows" :key="show.date + show.venue">
-              <component
-                :is="show.tickets ? 'a' : 'div'"
-                class="show-row"
-                v-bind="
-                  show.tickets
-                    ? {
-                        href: show.tickets,
-                        target: '_blank',
-                        rel: 'noopener noreferrer',
-                        'aria-label': `Tickets for ${tour.artist} at ${show.venue}, ${show.city}, ${show.full} (opens in a new tab)`,
-                      }
-                    : {}
-                "
-              >
-                <time class="show-date" :datetime="show.date" :title="show.full">
-                  <span class="show-day">{{ show.day }}</span>
-                  <span class="show-month">{{ show.month }}</span>
-                </time>
+            <li v-for="(show, index) in upcomingShows" :key="show.date + show.venue" class="show-row">
+              <time class="show-date" :datetime="show.date" :title="show.full">
+                <span class="show-day">{{ show.day }}</span>
+                <span class="show-month">{{ show.month }}</span>
+              </time>
+              <span class="show-place">
                 <span class="show-venue">
                   {{ show.venue }}
                   <span v-if="index === 0" class="show-next">Next</span>
                 </span>
-                <span class="show-city">
-                  {{ show.city }}, {{ show.country }}
-                  <span class="show-weekday">
-                    {{ show.weekday }}<template v-if="show.doors"> · Doors {{ show.doors }}</template>
-                  </span>
+                <span class="show-meta">
+                  {{ show.city }}, {{ show.country }} · {{ show.weekday }}<template v-if="show.doors"> · Doors {{ show.doors }}</template>
                 </span>
-                <span v-if="show.tickets" class="show-action">Tickets <span aria-hidden="true">→</span></span>
-              </component>
+              </span>
+              <span class="show-with">
+                <span class="show-label-inline">Touring with</span>
+                <strong>{{ show.with }}</strong>
+                <span v-if="show.tour" class="show-meta"><em>{{ show.tour }}</em> tour</span>
+              </span>
+              <a
+                v-if="show.tickets"
+                class="show-action"
+                :href="show.tickets"
+                target="_blank"
+                rel="noopener noreferrer"
+                :aria-label="`Tickets for ${show.with} at ${show.venue}, ${show.city}, ${show.full} (opens in a new tab)`"
+              >
+                Tickets <span aria-hidden="true">↗</span>
+              </a>
+              <span v-else class="show-action is-none">—</span>
             </li>
           </ol>
+          <p v-else class="show-empty">No upcoming shows right now. New dates will appear here first.</p>
+
+          <template v-if="pastShows.length">
+            <p class="kicker show-past-kicker">Recently on stage</p>
+            <ol class="show-list is-past">
+              <li v-for="show in pastShows" :key="show.date + show.venue" class="show-row">
+                <time class="show-date" :datetime="show.date" :title="show.full">
+                  <span class="show-day">{{ show.day }}</span>
+                  <span class="show-month">{{ show.month }} {{ show.year }}</span>
+                </time>
+                <span class="show-place">
+                  <span class="show-venue">{{ show.venue }}</span>
+                  <span class="show-meta">{{ show.city }}, {{ show.country }}</span>
+                </span>
+                <span class="show-with">
+                  <span class="show-label-inline">Touring with</span>
+                  <strong>{{ show.with }}</strong>
+                  <span v-if="show.tour" class="show-meta"><em>{{ show.tour }}</em> tour</span>
+                </span>
+                <span class="show-action is-none">Played</span>
+              </li>
+            </ol>
+          </template>
         </div>
       </section>
 
@@ -379,7 +422,6 @@ onBeforeUnmount(stopTimer)
           </p>
           <a class="mag-btn mag-btn-cream mag-btn-lg" :href="`mailto:${contact.email}`">Work with me</a>
           <div class="cta-links">
-            <a class="cta-pill" :href="`mailto:${contact.email}`">{{ contact.email }}</a>
             <a
               v-for="link in contact.links"
               :key="link.href"
@@ -402,12 +444,13 @@ onBeforeUnmount(stopTimer)
           <nav class="footer-nav" aria-label="Footer">
             <a href="#about">About</a>
             <a href="#music">Music</a>
+            <a href="#productions">Productions</a>
             <a href="#live">Live</a>
             <a href="#coaching">Coaching</a>
             <a href="#education">Education</a>
             <a href="#contact">Contact</a>
           </nav>
-          <p>© {{ new Date().getFullYear() }} Alex Haak · Writer · Producer · Musician · Coach</p>
+          <p>© {{ new Date().getFullYear() }} Alex Haak · Touring musician · Producer · Writer · Coach</p>
         </div>
       </div>
     </footer>

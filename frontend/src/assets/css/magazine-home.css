@@ -1002,25 +1002,40 @@
   color: var(--ink-soft);
 }
 
+/* Column labels above the rows: Date // Location // Touring with // Tickets */
+.show-labels,
+.show-row {
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1.2fr) minmax(0, 1fr) 110px;
+  gap: 24px;
+}
+
+.show-labels {
+  padding: 0 12px 12px;
+  color: var(--ink-soft);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.show-labels span:last-child {
+  text-align: right;
+}
+
 .show-list {
   border-top: 1px solid rgba(23, 20, 20, 0.18);
 }
 
 .show-row {
-  display: grid;
-  grid-template-columns: 150px minmax(0, 1fr) minmax(0, 0.8fr) auto;
-  align-items: baseline;
-  gap: 24px;
+  align-items: center;
   padding: 26px 12px;
   border-bottom: 1px solid rgba(23, 20, 20, 0.18);
-  transition:
-    background-color 250ms ease,
-    color 250ms ease;
+  transition: background-color 250ms ease;
 }
 
-a.show-row:hover {
-  background: var(--red);
-  color: var(--paper);
+.show-list:not(.is-past) .show-row:hover {
+  background: rgba(122, 31, 36, 0.06);
 }
 
 .show-date {
@@ -1041,6 +1056,13 @@ a.show-row:hover {
 .show-month {
   font-size: 1.4rem;
   font-style: italic;
+}
+
+.show-place,
+.show-with {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
 }
 
 .show-venue {
@@ -1067,43 +1089,120 @@ a.show-row:hover {
   letter-spacing: 0.16em;
 }
 
-.show-city {
-  display: grid;
-  font-size: 0.74rem;
-  font-weight: 600;
-  letter-spacing: 0.16em;
+.show-meta {
+  color: var(--ink-soft);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
 }
 
-.show-weekday {
-  color: var(--ink-soft);
+.show-meta em {
+  font-family: var(--serif);
+  font-size: 0.95rem;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.show-with strong {
+  font-family: var(--serif);
+  font-size: clamp(1.3rem, 2.2vw, 1.8rem);
   font-weight: 500;
-  letter-spacing: 0.1em;
+  font-style: italic;
+  line-height: 1.05;
+}
+
+/* Only shown on phones, where the column labels are hidden */
+.show-label-inline {
+  display: none;
+  color: var(--ink-soft);
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
 }
 
 .show-action {
-  font-size: 0.7rem;
+  justify-self: end;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 0 18px;
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+  font-size: 0.68rem;
   font-weight: 600;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   white-space: nowrap;
+  transition:
+    background-color 200ms ease,
+    border-color 200ms ease,
+    color 200ms ease;
 }
 
-a.show-row:hover .show-date,
-a.show-row:hover .show-weekday {
-  color: inherit;
+a.show-action:hover {
+  border-color: var(--red);
+  background: var(--red);
+  color: var(--paper);
 }
 
-a.show-row:hover .show-next {
-  background: var(--paper);
+.show-action.is-none {
+  border-color: transparent;
+  color: var(--ink-soft);
+}
+
+.show-empty {
+  padding: 26px 12px;
+  border-top: 1px solid rgba(23, 20, 20, 0.18);
+  border-bottom: 1px solid rgba(23, 20, 20, 0.18);
+  color: var(--ink-soft);
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  font-style: italic;
+}
+
+.magazine .show-past-kicker {
+  margin-top: 56px;
   color: var(--red);
 }
 
-/* Phones: date on the left, venue and city stacked beside it */
+/* Past shows: smaller and quieter */
+.show-list.is-past .show-row {
+  padding-block: 18px;
+}
+
+.show-list.is-past .show-date {
+  color: var(--ink-soft);
+}
+
+.show-list.is-past .show-day {
+  font-size: clamp(2rem, 3.6vw, 2.8rem);
+}
+
+.show-list.is-past .show-month {
+  font-size: 1rem;
+}
+
+.show-list.is-past .show-venue {
+  font-size: clamp(1.2rem, 2vw, 1.6rem);
+}
+
+.show-list.is-past .show-with strong {
+  font-size: clamp(1.1rem, 1.8vw, 1.4rem);
+}
+
+/* Phones: date on the left, location / touring with / tickets stacked beside it */
 @media (max-width: 760px) {
+  .show-labels {
+    display: none;
+  }
+
   .show-row {
     grid-template-columns: auto minmax(0, 1fr);
-    gap: 6px 18px;
+    gap: 14px 18px;
+    align-items: start;
     padding: 22px 4px;
   }
 
@@ -1113,8 +1212,507 @@ a.show-row:hover .show-next {
     gap: 2px;
   }
 
+  .show-place,
+  .show-with,
   .show-action {
     grid-column: 2;
+  }
+
+  .show-label-inline {
+    display: block;
+  }
+
+  .show-action {
+    justify-self: start;
+  }
+
+  .show-action.is-none {
+    display: none;
+  }
+}
+
+/* ---------- Productions: cover-art grid ---------- */
+/* Follows the black Music section, so no top padding; the margin keeps the heading clear of the fixed header */
+.zone-productions {
+  padding-top: 0;
+  scroll-margin-top: 100px;
+}
+
+.prod-stats {
+  display: flex;
+  gap: 28px;
+  margin-top: 18px;
+}
+
+.prod-stats div {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.prod-stats dd {
+  font-family: var(--serif);
+  font-size: 2rem;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.prod-stats dt {
+  color: rgba(245, 236, 226, 0.6);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.prod-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-auto-flow: dense;
+  gap: 18px;
+}
+
+.prod-tile {
+  position: relative;
+}
+
+.prod-tile.is-feature {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+
+.prod-art {
+  position: relative;
+  display: block;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 14px;
+  background: #1c1717;
+}
+
+.prod-art img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(1) contrast(1.08);
+  transition:
+    filter 450ms ease,
+    scale 600ms ease;
+}
+
+.prod-tile:hover .prod-art img,
+.prod-tile:focus-within .prod-art img,
+.prod-tile.is-playing .prod-art img {
+  filter: none;
+  scale: 1.04;
+}
+
+/* Dark fade at the bottom so the text stays readable */
+.prod-art::after {
+  content: '';
+  position: absolute;
+  inset: 40% 0 0;
+  background: linear-gradient(180deg, transparent, rgba(14, 12, 12, 0.88));
+  pointer-events: none;
+}
+
+.prod-no {
+  position: absolute;
+  top: 12px;
+  left: 14px;
+  color: var(--paper);
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  font-style: italic;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+}
+
+.prod-tile.is-feature .prod-no {
+  top: 16px;
+  left: 20px;
+  font-size: 2.6rem;
+  font-style: normal;
+}
+
+.prod-count {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  padding: 6px 11px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(14, 12, 12, 0.72);
+  backdrop-filter: blur(6px);
+  color: var(--paper);
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 200ms ease;
+}
+
+.prod-count:hover {
+  background: var(--red);
+}
+
+.prod-meta {
+  position: absolute;
+  left: 14px;
+  right: 62px;
+  bottom: 14px;
+}
+
+.prod-tile.is-feature .prod-meta {
+  left: 22px;
+  right: 92px;
+  bottom: 22px;
+}
+
+.prod-role {
+  margin-bottom: 4px !important;
+  color: var(--pink);
+  font-size: 0.56rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.prod-title {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  font-weight: 500;
+  line-height: 1.15;
+}
+
+.prod-title a:hover {
+  color: var(--pink);
+}
+
+.prod-tile.is-feature .prod-title {
+  font-size: clamp(1.6rem, 3vw, 2.6rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.prod-artist {
+  margin-top: 3px;
+  color: rgba(245, 236, 226, 0.75);
+  font-size: 0.74rem;
+}
+
+.prod-tile.is-feature .prod-artist {
+  margin-top: 8px;
+  font-size: 0.9rem;
+}
+
+/* Small tiles: text appears on hover or focus (always on touch screens) */
+.prod-tile:not(.is-feature) .prod-meta,
+.prod-tile:not(.is-feature) .prod-art::after {
+  opacity: 0;
+  transition: opacity 250ms ease;
+}
+
+.prod-tile:not(.is-feature):hover .prod-meta,
+.prod-tile:not(.is-feature):focus-within .prod-meta,
+.prod-tile:not(.is-feature).is-playing .prod-meta,
+.prod-tile:not(.is-feature):hover .prod-art::after,
+.prod-tile:not(.is-feature):focus-within .prod-art::after,
+.prod-tile:not(.is-feature).is-playing .prod-art::after {
+  opacity: 1;
+}
+
+@media (hover: none) {
+  .prod-tile:not(.is-feature) .prod-meta,
+  .prod-tile:not(.is-feature) .prod-art::after {
+    opacity: 1;
+  }
+}
+
+.prod-play {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--paper);
+  color: var(--ink);
+  cursor: pointer;
+  transition:
+    background-color 200ms ease,
+    color 200ms ease,
+    transform 200ms ease;
+}
+
+.prod-play:hover,
+.prod-tile.is-playing .prod-play {
+  background: var(--red);
+  color: #fff;
+}
+
+.prod-play:hover {
+  transform: scale(1.06);
+}
+
+.prod-play svg {
+  width: 14px;
+  height: 14px;
+  fill: currentColor;
+}
+
+.prod-tile.is-feature .prod-play {
+  right: 20px;
+  bottom: 20px;
+  width: 60px;
+  height: 60px;
+}
+
+.prod-tile.is-feature .prod-play svg {
+  width: 20px;
+  height: 20px;
+}
+
+.prod-progress {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: 0;
+  height: 3px;
+  overflow: hidden;
+  border-radius: 3px;
+  pointer-events: none;
+}
+
+.prod-progress i {
+  display: block;
+  height: 100%;
+  background: var(--pink);
+}
+
+.prod-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-top: 42px;
+  padding-top: 26px;
+  border-top: 1px solid rgba(245, 236, 226, 0.18);
+}
+
+.prod-foot p {
+  color: rgba(245, 236, 226, 0.6);
+  font-size: 0.9rem;
+}
+
+.prod-foot-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.prod-foot .mag-btn:hover {
+  border-color: var(--red);
+}
+
+.prod-show-all {
+  display: none;
+}
+
+/* Tracklist panel for releases with several songs */
+.prod-dialog {
+  width: min(440px, 100%);
+  max-width: 100%;
+  height: 100%;
+  max-height: 100%;
+  margin: 0 0 0 auto;
+  padding: 0;
+  border: 0;
+  border-left: 1px solid rgba(245, 236, 226, 0.18);
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.prod-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.prod-dialog[open] {
+  animation: prod-slide 300ms ease;
+}
+
+@keyframes prod-slide {
+  from {
+    transform: translateX(100%);
+  }
+}
+
+.prod-dialog-body {
+  position: relative;
+  padding: 28px;
+}
+
+.prod-dialog-close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgba(245, 236, 226, 0.18);
+  border-radius: 50%;
+  background: none;
+  color: inherit;
+  font-size: 1.05rem;
+  cursor: pointer;
+}
+
+.prod-dialog-close:hover {
+  border-color: var(--red);
+  background: var(--red);
+}
+
+.prod-dialog img {
+  width: 120px;
+  aspect-ratio: 1;
+  margin-bottom: 18px;
+  border-radius: 10px;
+}
+
+.prod-dialog .kicker {
+  color: var(--pink);
+}
+
+.prod-dialog h3 {
+  margin-bottom: 6px;
+  font-family: var(--serif);
+  font-size: 2rem;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.prod-dialog-artist {
+  margin-bottom: 22px !important;
+  color: rgba(245, 236, 226, 0.6);
+}
+
+.prod-tracks {
+  border-top: 1px solid rgba(245, 236, 226, 0.18);
+}
+
+.prod-tracks li {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr) 40px;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(245, 236, 226, 0.18);
+}
+
+.prod-track-no {
+  color: var(--pink);
+  font-family: var(--serif);
+  font-style: italic;
+}
+
+.prod-tracks a {
+  font-family: var(--serif);
+  font-size: 1.1rem;
+}
+
+.prod-tracks a:hover {
+  color: var(--pink);
+}
+
+.prod-track-play {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(245, 236, 226, 0.18);
+  border-radius: 50%;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.prod-track-play svg {
+  width: 11px;
+  height: 11px;
+  fill: currentColor;
+}
+
+.prod-track-play:hover,
+.prod-track-play.is-playing {
+  border-color: var(--red);
+  background: var(--red);
+}
+
+@media (max-width: 980px) {
+  .prod-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .prod-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .prod-tile.is-feature {
+    grid-row: span 1;
+  }
+
+  .prod-tile.is-feature .prod-art {
+    aspect-ratio: 4 / 3;
+  }
+
+  .prod-tile.is-feature .prod-no {
+    font-size: 1.8rem;
+  }
+
+  .prod-tile.is-feature .prod-play {
+    width: 48px;
+    height: 48px;
+  }
+
+  .prod-tile:not(.is-feature) .prod-meta {
+    left: 10px;
+    right: 10px;
+    bottom: 60px;
+  }
+
+  .prod-tile:not(.is-feature) .prod-artist {
+    display: none;
+  }
+
+  .prod-tile:not(.is-feature) .prod-play {
+    right: 10px;
+    bottom: 10px;
+  }
+
+  .prod-grid:not(.is-expanded) .prod-tile:nth-child(n + 12) {
+    display: none;
+  }
+
+  .prod-show-all {
+    display: inline-flex;
+  }
+
+  .prod-foot {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+
+  .prod-foot-actions {
+    flex-direction: column;
   }
 }
 
